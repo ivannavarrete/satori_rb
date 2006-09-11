@@ -14,6 +14,7 @@
 
 
 # parse options
+require 'English'
 require 'optparse'
 require 'rdoc/usage'
 
@@ -23,7 +24,7 @@ opts.parse(ARGV) rescue RDoc::usage('usage')
 
 
 # start the program
-Dir.chdir("/home/share/coding/ruby/satori/src/")
+Dir.chdir(File.join(File.dirname(__FILE__), ".."))
 
 require 'satori/ui/txt/basetxtui'
 

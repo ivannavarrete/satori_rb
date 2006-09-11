@@ -17,7 +17,7 @@ public
 	def idle
 		message("Satori version r0.1", "Welcome", "")
 
-		while (true) do
+		loop do
 			# get user input
 			print("#{Color.prompt}: #{Color.default}")
 			redo if (command_line = gets.strip) == ""
