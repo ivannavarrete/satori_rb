@@ -5,6 +5,17 @@ require 'lib/color'
 
 
 class TxtUi
+	## Execute command specified by +command_line+. Return +nil+ if command
+	## wasn't found and true if it was found and tried to execute. Throw
+	## +NoMethodError+ if command was found in the command table but not
+	## implemented.
+	def exec(command_line)
+		if command = parse_command(command_line)
+			send("command_#{command.type}", command)
+			true
+		end
+	end
+
 	## Given a command line, find a command in the command table that can
 	## successfully parse that line. Returns a copied and initialized Command
 	## object or nil if no matching command was found.

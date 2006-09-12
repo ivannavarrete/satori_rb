@@ -4,30 +4,15 @@ require 'lib/command'
 
 
 class AvrCommandTable < OrderedHash
-	GetCode = 101
-	GetSRAM = 102
-	GetEEPROM = 103
-	GetFLASH = 104
-	SetSRAM = 105
-	SetEEPROM = 106
-	GetState = 107
-	SetState = 108
-	GetDevice = 120
-	SetDevice = 121
-	GetDeviceInfo = 122
-	GetDeviceList = 123
-	Help = 199
-
-
 	def initialize
 		super
 
 		# device [device_name | list | info]
 		self['device'] = Command.new(
-			[[/^\s*device\s*$/,			GetDevice],
-			 [/^\s*device\s+info\s*$/,	GetDeviceInfo],
-			 [/^\s*device\s+list\s*$/,	GetDeviceList],
-			 [/^\s*device\s+(\w*)\s*$/,	SetDevice]],
+			[[/^\s*device\s*$/,				"get_device"],
+			 [/^\s*device\s+info\s*$/,		"get_device_info"],
+			 [/^\s*device\s+list\s*$/,		"get_device_list"],
+			 [/^\s*device\s+(\w*)\s*$/,		"set_device"]],
 			[["[device_name | list | info]","load device / get device info"]],
 			[["",							"display selected AVR device"],
 			 ["list",						"list all available devices"],
@@ -36,12 +21,12 @@ class AvrCommandTable < OrderedHash
 
 		# c <start_addr> [end_addr]
 		self['c'] = Command.new(
-			[[/^\s*c\s+(\d+)(?:\s*$|(\s+\d+)?$)/, GetCode]],
-			[["<start_addr> [end_addr]","show disassembled code"]],
-			[["<start_addr>",			"display 64 words of code"],
-			 ["<start_addr> <end_addr>","disassemble memory starting at "\
-			 							"<start_addr> and ending at "\
-										"<end_addr>"]])
+			[[/^\s*c\s+(\d+)(?:\s*$|(\s+\d+)?$)/, "get_code"]],
+			[["<start_addr> [end_addr]",	"show disassembled code"]],
+			[["<start_addr>",				"display 64 words of code"],
+			 ["<start_addr> <end_addr>",	"disassemble memory starting at "\
+			 								"<start_addr> and ending at "\
+											"<end_addr>"]])
 
 		# ds <start_addr> [end_addr | = [number | string | array]]
 		#self['ds'] = Command.new(
@@ -51,18 +36,18 @@ class AvrCommandTable < OrderedHash
 
 		# df <start_addr> [end_addr]
 		self['df'] = Command.new(
-			[[/^\s*df\s+(\d+)(?:\s*$|(\s+\d+)?$)/, GetFLASH]],
-			[["<start_addr> [end_addr]","display FLASH memory"]],
-			[["<start_addr>",			"display 40 bytes of FLASH memory "\
-										"starting at <start_addr>"],
-			 ["<start_addr> <end_addr>","display FLASH memory starting at "\
-			 							"<start_addr> and ending at "\
-										"<end_addr>"]])
+			[[/^\s*df\s+(\d+)(?:\s*$|(\s+\d+)?$)/, "get_flash"]],
+			[["<start_addr> [end_addr]",	"display FLASH memory"]],
+			[["<start_addr>",				"display 40 bytes of FLASH memory "\
+											"starting at <start_addr>"],
+			 ["<start_addr> <end_addr>",	"display FLASH memory starting at "\
+			 								"<start_addr> and ending at "\
+											"<end_addr>"]])
 
 		# reg [reg_name [= value]]
 		self['reg'] = Command.new(
-			[[/^\sreg(?:\s*$|(\s+\w+)?$)/, GetState],
-			 [/^\sreg/, SetState]],
+			[[/^\s*reg\s*$/,				"get_state"],
+			 [/^\s*reg(?:\s*$|(\s+\w+)?$)/,	"get_state"]],
 			[["[regname [= value]]",	"display/set CPU state"]],
 			[["",						"display CPU state"],
 			 ["<regname>",				"display CPU register <regname>"],
@@ -70,6 +55,6 @@ class AvrCommandTable < OrderedHash
 
 		# help [command_name]
 		self['help'] = Command.new(
-			[[/^s*help\s*$|(?:\s+)(\w+)?/, Help]])
+			[[/^s*help\s*$|(?:\s+)(\w+)?/, "help"]])
 	end
 end

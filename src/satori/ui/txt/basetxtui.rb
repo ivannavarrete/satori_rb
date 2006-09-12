@@ -38,31 +38,13 @@ public
 	end
 
 private
-	## Execute the command specified in the command line
-	## Return false if command wasn't found and true if it was found and
-	## tried to execute.
-	def exec(command_line)
-		return false unless command = parse_command(command_line)
-	
-		case (command.type)
-		when BaseCommandTable::Quit:		command_quit
-		when BaseCommandTable::ShowModule:	command_show_module
-		when BaseCommandTable::LoadModule:	command_load_module(command)
-		when BaseCommandTable::ClearScreen:	command_clear_screen
-		when BaseCommandTable::Help:		command_help(command)
-		else raise NotImplementedError, "Command found but not implemented"
-		end
-
-		true
-	end
-
 	## Terminate program.
-	def command_quit
+	def command_quit(command)
 		exit 0
 	end
 
 	## Show available communication and architecture modules.
-	def command_show_module
+	def command_show_module(command)
 		message("--[ Architecture modules ]--")
 		Dir.glob(File.join(@arch_dir,"*")) {|n| message("  #{n.slice(/\w+$/)}")}
 		
@@ -85,7 +67,7 @@ private
 
 	## Clear screen.
 	## @Todo: Find out the screen geometry at runtime for more precise clearing.
-	def command_clear_screen
+	def command_clear_screen(command)
 		80.times { message("") }
 	end
 

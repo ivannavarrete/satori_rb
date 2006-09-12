@@ -4,36 +4,30 @@ require 'lib/command'
 
 
 class BaseCommandTable < OrderedHash
-	Quit = 1
-	ShowModule = 2
-	LoadModule = 3
-	ClearScreen = 4
-	Help = 5
-
 	## Initialize the command table with the standard commands.
 	def initialize
 		super
 
 		self['cls'] = Command.new(
-			[[/^\s*cls\s*$/,	ClearScreen]],
+			[[/^\s*cls\s*$/,	"clear_screen"]],
 			[["",				"clear screen"]],
 			[["",				"clear screen"]])
 
 		self['module'] = Command.new(
-			[[/^\s*module\s*$/,	ShowModule],
-			 [/^\s*module\s+(\w+)\s*$/, LoadModule]],
+			[[/^\s*module\s*$/,	"show_module"],
+			 [/^\s*module\s+(\w+)\s*$/, "load_module"]],
 			[["[module_name]",	"show/load modules"]],
 			[["",				"show available modules"],
 			 ["<module_name>",	"load module <module_name>"]])
 		
 		self['help'] = Command.new(
-			[[/^\s*help(?:\s*$|(\s+\w+\s*)?$)/, Help]],
+			[[/^\s*help(?:\s*$|(\s+\w+\s*)?$)/, "help"]],
 			[["[command]",		"display help"]],
 			[["",				"display brief help on all commands"],
 			 ["<command>",		"display detailed help on <command>"]])
 
 		self['quit'] = Command.new(
-			[[/^\s*quit\s*$/,	Quit]],
+			[[/^\s*quit\s*$/,	"quit"]],
 			[["",				"terminate program"]],
 			[["",				"terminate program"]])
 	end
