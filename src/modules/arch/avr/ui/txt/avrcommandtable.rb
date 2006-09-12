@@ -4,8 +4,7 @@ require 'lib/command'
 
 
 class AvrCommandTable < OrderedHash
-	GetDevice = 100
-	SetDevice = 101
+	GetCode = 101
 	GetSRAM = 102
 	GetEEPROM = 103
 	GetFLASH = 104
@@ -13,20 +12,27 @@ class AvrCommandTable < OrderedHash
 	SetEEPROM = 106
 	GetState = 107
 	SetState = 108
-	GetCode = 109
+	GetDevice = 120
+	SetDevice = 121
+	GetDeviceInfo = 122
+	GetDeviceList = 123
 	Help = 199
 
 
 	def initialize
 		super
 
-		# device [device_name]
+		# device [device_name | list | info]
 		self['device'] = Command.new(
 			[[/^\s*device\s*$/,			GetDevice],
+			 [/^\s*device\s+info\s*$/,	GetDeviceInfo],
+			 [/^\s*device\s+list\s*$/,	GetDeviceList],
 			 [/^\s*device\s+(\w*)\s*$/,	SetDevice]],
-			[["[device_name]",			"display/select AVR device"]],
-			[["",						"display selected AVR device"],
-			 ["<device_name>",			"select AVR device"]])
+			[["[device_name | list | info]","load device / get device info"]],
+			[["",							"display selected AVR device"],
+			 ["list",						"list all available devices"],
+			 ["info",						"get info on loaded device"],
+			 ["<device_name>",				"load device"]])
 
 		# c <start_addr> [end_addr]
 		self['c'] = Command.new(

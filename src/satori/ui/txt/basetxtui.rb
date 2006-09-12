@@ -1,11 +1,15 @@
 
 require 'satori/ui/txt/basecommandtable'
-require 'lib/txtui'
+require 'lib/ui/txt/txtui'
 
 
 class BaseTxtUi < TxtUi
 public
 	def initialize
+		# Todo: Move the dirs into a 'config' module/class/namespace.
+		@arch_dir = File.join("modules", "arch")
+		@comm_dir = File.join("modules", "comm")
+
 		@command_table = BaseCommandTable.new
 		@arch_ui = nil
 		@comm_ui = nil
@@ -59,25 +63,20 @@ private
 
 	## Show available communication and architecture modules.
 	def command_show_module
-		arch_dir = "modules/arch/"
-		comm_dir = "modules/comm/"
-		
 		message("--[ Architecture modules ]--")
-		Dir.glob(arch_dir + "*") {|name| message("  #{name.slice(/\w+$/)}") }
+		Dir.glob(File.join(@arch_dir,"*")) {|n| message("  #{n.slice(/\w+$/)}")}
 		
 		message("--[ Communication modules ]--")
-		Dir.glob(comm_dir + "*") {|name| message("  #{name.slice(/\w+$/)}") }
+		Dir.glob(File.join(@comm_dir,"*")) {|n| message("  #{n.slice(/\w+$/)}")}
 	end
 
 	## Load a communication or architecture module.
 	def command_load_module(command)
-		arch_dir = "modules/arch/"
-		comm_dir = "modules/comm/"
-
 		module_name = command.arguments[0].strip
+		arch_dir = File.join(@arch_dir, module_name)
 
-		Dir.chdir(arch_dir + module_name) do
-			$: << arch_dir + module_name
+		Dir.chdir(arch_dir) do
+			$: << arch_dir
 			load "#{module_name}.rb"
 			@arch_ui = Object.const_get("#{module_name.capitalize}TxtUi").new
 			message("architecture module loaded: #{module_name}")

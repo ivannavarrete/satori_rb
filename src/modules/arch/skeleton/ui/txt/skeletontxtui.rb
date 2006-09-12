@@ -1,6 +1,6 @@
 
+require 'lib/ui/txt/txtui'
 require 'ui/txt/skeletoncommandtable'
-require 'lib/txtui'
 
 
 class SkeletonTxtUi < TxtUi
@@ -14,7 +14,7 @@ class SkeletonTxtUi < TxtUi
 
 		# write a clause for each command type in the command table
 		case (command.type)
-		when SkeletonCommandTable::Test:		commant_test(command)
+		when SkeletonCommandTable::Test:		command_test(command)
 		when SkeletonCommandTable::Help:		command_help(command)
 
 		# raise an exception if there is a command in the command table that
@@ -27,7 +27,7 @@ class SkeletonTxtUi < TxtUi
 	end
 
 private
-	def test(command)
+	def command_test(command)
 		message("test command")
 	end
 

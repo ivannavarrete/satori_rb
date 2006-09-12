@@ -1,4 +1,5 @@
 
+require 'lib/ui/txt/memorytxtwindow'
 require 'lib/command'
 require 'lib/color'
 
