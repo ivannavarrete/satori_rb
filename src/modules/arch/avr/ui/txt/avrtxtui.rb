@@ -13,14 +13,14 @@ class AvrTxtUi < TxtUi
 	end
 
 private
-	# Display the name of the currently loaded device.
+	## Display the name of the currently loaded device.
 	def command_get_device(command)
 		if @device then message("device: #{@device.name}")
 		else error("no device loaded")
 		end
 	end
 
-	# Load new device.
+	## Load new device.
 	def command_set_device(command)
 		device_name = command.arguments[0].downcase
 
@@ -38,7 +38,7 @@ private
 		end
 	end
 
-	# Get info on loaded device.
+	## Get info on loaded device.
 	def command_get_device_info(command)
 		command_get_device(command)
 		if @device
@@ -47,7 +47,7 @@ private
 		end
 	end
 
-	# List all available devices.
+	## List all available devices.
 	def command_get_device_list(command)
 		dir = File.join(@module_dir, "device", "*.rb")
 		Dir.glob(dir) {|file| message("  #{File.basename(file, ".rb")}") }
@@ -55,23 +55,17 @@ private
 	
 	def command_get_code(command)
 		start_addr = command.arguments[0].to_i
-		end_addr = start_addr + 64
+		end_addr = start_addr + 63
 		end_addr = command.arguments[1].to_i if command.arguments[1]
 
 		message("get_code #{start_addr} #{end_addr}")
 	end
 	
 	##
-	def command_get_memory(command)
+	def command_get_memory(command, name)
 		start_addr = command.arguments[0].to_i
-		end_addr = start_addr + 64
+		end_addr = start_addr + 63
 		end_addr = command.arguments[1].to_i if command.arguments[1]
-
-		name = case command.type
-			   when AvrCommandTable::GetSRAM: "sram"
-			   when AvrCommandTable::GetEEPROM: "eeprom"
-			   when AvrCommandTable::GetFLASH: "flash"
-			   end
 
 		@windows[name].read(start_addr..end_addr)
 	end

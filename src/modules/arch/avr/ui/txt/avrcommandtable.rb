@@ -28,17 +28,31 @@ class AvrCommandTable < OrderedHash
 			 								"<start_addr> and ending at "\
 											"<end_addr>"]])
 
-		# ds <start_addr> [end_addr | = [number | string | array]]
-		#self['ds'] = Command.new(
-		#	[[/^s*ds\s+(\d+)\s+(\d*)|(\w*)|\[
+		# ds <start_addr> [end_addr] ## | = [number | string | array]]
+		self['ds'] = Command.new(
+			[[/^\s*ds\s+(\d+)(?:\s*$|(\s+\d+)?$)/, "get_memory", "sram"]],
+			[["<start_addr> [end_addr]",	"display SRAM memory"]],
+			[["<start_addr>",				"display 64 bytes of SRAM memory "\
+											"starting at <start_addr>"],
+			 ["<start_addr> <end_addr>",	"display SRAM memory starting at "\
+			 								"<start_addr> and ending at "\
+											"<end_addr>"]])
 
-		# de <start_addr> [end_addr | = [number | string | array]]
+		# de <start_addr> [end_addr] ## | = [number | string | array]]
+		self['de'] = Command.new(
+			[[/^\s*de\s+(\d+)(?:\s*$|(\s+\d+)?$)/, "get_memory", "eeprom"]],
+			[["<start_addr> [end_addr]",	"display FLASH memory"]],
+			[["<start_addr>",				"display 64 bytes of EEPROM memory"\
+											" starting at <start_addr>"],
+			 ["<start_addr> <end_addr>",	"display EEPROM memory starting at"\
+			 								" <start_addr> and ending at "\
+											"<end_addr>"]])
 
 		# df <start_addr> [end_addr]
 		self['df'] = Command.new(
-			[[/^\s*df\s+(\d+)(?:\s*$|(\s+\d+)?$)/, "get_flash"]],
+			[[/^\s*df\s+(\d+)(?:\s*$|(\s+\d+)?$)/, "get_memory", "flash"]],
 			[["<start_addr> [end_addr]",	"display FLASH memory"]],
-			[["<start_addr>",				"display 40 bytes of FLASH memory "\
+			[["<start_addr>",				"display 64 bytes of FLASH memory "\
 											"starting at <start_addr>"],
 			 ["<start_addr> <end_addr>",	"display FLASH memory starting at "\
 			 								"<start_addr> and ending at "\

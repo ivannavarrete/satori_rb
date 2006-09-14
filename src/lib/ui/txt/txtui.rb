@@ -11,7 +11,11 @@ class TxtUi
 	## implemented.
 	def exec(command_line)
 		if command = parse_command(command_line)
-			send("command_#{command.type}", command)
+			if command.method_args.empty?
+				send("command_#{command.method}", command)
+			else
+				send("command_#{command.method}", command, *command.method_args)
+			end
 			true
 		end
 	end
