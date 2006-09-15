@@ -63,15 +63,14 @@ private
 	
 	##
 	def command_get_memory(command, name)
-		start_addr = command.arguments[0].to_i
-		end_addr = start_addr + 63
+		start_addr = end_addr = command.arguments[0].to_i
 		end_addr = command.arguments[1].to_i if command.arguments[1]
 
 		@windows[name].read(start_addr..end_addr)
 	end
 	
 	##
-	def command_set_memory(command)
+	def command_set_memory(command, name)
 		message("set_memory")
 	end
 	

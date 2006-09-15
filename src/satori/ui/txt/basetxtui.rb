@@ -59,7 +59,7 @@ private
 
 		Dir.chdir(arch_dir) do
 			$: << arch_dir
-			load "#{module_name}.rb"
+			load "#{arch_dir}/#{module_name}.rb"
 			@arch_ui = Object.const_get("#{module_name.capitalize}TxtUi").new
 			message("architecture module loaded: #{module_name}")
 		end rescue error("module not found [#{module_name}]")

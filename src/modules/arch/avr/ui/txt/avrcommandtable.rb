@@ -32,7 +32,7 @@ class AvrCommandTable < OrderedHash
 		self['ds'] = Command.new(
 			[[/^\s*ds\s+(\d+)(?:\s*$|(\s+\d+)?$)/, "get_memory", "sram"]],
 			[["<start_addr> [end_addr]",	"display SRAM memory"]],
-			[["<start_addr>",				"display 64 bytes of SRAM memory "\
+			[["<start_addr>",				"display one byte of SRAM memory "\
 											"starting at <start_addr>"],
 			 ["<start_addr> <end_addr>",	"display SRAM memory starting at "\
 			 								"<start_addr> and ending at "\
