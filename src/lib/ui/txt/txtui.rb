@@ -1,4 +1,5 @@
 
+require 'lib/ui/txt/message'
 require 'lib/ui/txt/memorytxtwindow'
 require 'lib/command'
 require 'lib/color'
@@ -8,7 +9,8 @@ class TxtUi
 	## Execute command specified by +command_line+. Return +nil+ if command
 	## wasn't found and true if it was found and tried to execute. Throw
 	## +NoMethodError+ if command was found in the command table but not
-	## implemented.
+	## implemented. This exception indicates that commandtable and ui are not
+	## synchronized.
 	def exec(command_line)
 		if command = parse_command(command_line)
 			if command.method_args.empty?
@@ -73,15 +75,5 @@ class TxtUi
 
 			message(format("  %-8s%-28s%s", command_name,arguments,description))
 		end
-	end
-
-	##
-    def message(*messages)
-		messages.each {|msg| puts "#{Color.prompt}] #{Color.headline}#{msg}" }
-	end
-
-	##
-	def error(cause)
-		puts "#{Color.prompt}] #{Color.error}#{cause}"
 	end
 end

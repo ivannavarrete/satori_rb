@@ -1,6 +1,4 @@
 
-require 'lib/color'
-
 
 class MemoryTxtWindow
 	def initialize(memory)
@@ -27,11 +25,8 @@ private
 	## Display memory in +data+ with start address +addr+.
 	## Todo: Kinda slow, perhaps mostly due to 'line.each'? Speed it up.
 	def show(data, addr)
-		if not data.empty?
-			puts "#{Color.prompt}]  #{Color.headline}--[ #{@memory.name} ]--"
-		end
+		message("--[ #{@memory.name} ]--") unless data.empty?
 
-		prefix = "#{Color.prompt}]  #{Color.address}"
 		while not data.empty?
 			line = data.slice!(0, 16)
 			
@@ -41,7 +36,7 @@ private
 			ascii = Color.ascii_data
 			line.each {|c| ascii += format(((0x20..0x7F)===c ? "%c" : "."), c)}
 
-			print prefix, format("%04x   %-59s  %s\n", addr, hex, ascii)
+			message(format(Color.address+"%04x   %-59s  %s\n", addr, hex,ascii))
 
 			addr += 16
 		end
@@ -53,7 +48,7 @@ private
 		data.each_index {|i| truncated << i if data[i] > 255 }
 
 		if not truncated.empty?
-			puts "] warning: truncated data at index: #{truncated.join(", ")}"
+			warning("truncated value at index: #{truncated.join(", ")}")
 			truncated.each {|i| data[i] %= 256 }
 		end
 	end
