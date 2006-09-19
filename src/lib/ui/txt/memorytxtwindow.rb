@@ -17,6 +17,12 @@ class MemoryTxtWindow
 		show(data, addr)
 	end
 
+	## Write +data+ to memory, starting at +start_addr+.
+	def write(data, start_addr)
+		truncate(data)
+		@memory.write(data, start_addr)
+	end
+
 private
 	## Display memory in +data+ with start address +addr+.
 	## Todo: Kinda slow, perhaps mostly due to 'line.each'? Speed it up.
@@ -38,6 +44,17 @@ private
 			print prefix, format("%04x   %-59s  %s\n", addr, hex, ascii)
 
 			addr += 16
+		end
+	end
+
+	## Adjust +data+ to only contain byte size numbers.
+	def truncate(data)
+		truncated = []
+		data.each_index {|i| truncated << i if data[i] > 255 }
+
+		if not truncated.empty?
+			puts "] warning: truncated data at index: #{truncated.join(", ")}"
+			truncated.each {|i| data[i] %= 256 }
 		end
 	end
 end

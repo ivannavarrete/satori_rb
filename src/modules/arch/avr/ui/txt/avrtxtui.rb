@@ -3,6 +3,8 @@ require 'lib/ui/txt/txtui'
 require 'ui/txt/avrcommandtable'
 
 
+### Bug: Many commands raise exceptions since they don't check if a device is
+###      loaded.
 class AvrTxtUi < TxtUi
 	def initialize
 		@module_dir = File.join("modules", "arch", "avr")
@@ -54,24 +56,32 @@ private
 	end
 	
 	def command_get_code(command)
-		start_addr = command.arguments[0].to_i
-		end_addr = start_addr + 63
-		end_addr = command.arguments[1].to_i if command.arguments[1]
+		start_addr = command.arguments[0]
+		end_addr = command.arguments[1] || start_addr + 63
 
 		message("get_code #{start_addr} #{end_addr}")
 	end
 	
-	##
+	## Read device memory.
 	def command_get_memory(command, name)
-		start_addr = end_addr = command.arguments[0].to_i
-		end_addr = command.arguments[1].to_i if command.arguments[1]
+		start_addr = command.arguments[0]
+		end_addr = command.arguments[1] || start_addr
 
 		@windows[name].read(start_addr..end_addr)
 	end
 	
-	##
+	## Write device memory.
 	def command_set_memory(command, name)
-		message("set_memory")
+		start_addr = command.arguments[0]
+		data = command.arguments[1]
+
+		# convert data argument into an array
+		data = if (data.class == Fixnum) then [data]
+			   elsif (data.class == String) then data.unpack("c*")
+			   elsif (data.class == Array) then data
+			   end
+
+		@windows[name].write(data, start_addr)
 	end
 	
 	##

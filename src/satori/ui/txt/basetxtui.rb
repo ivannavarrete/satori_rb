@@ -32,7 +32,7 @@ public
 			# get user input
 			command_line = readline("#{Color.prompt}: #{Color.default}", true)
 			command_quit(nil) if command_line.nil?
-			redo if command_line.strip! == ""
+			redo if command_line.strip == ""
 
 			# execute commands
 			executed = false
